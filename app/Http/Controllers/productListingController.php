@@ -65,7 +65,11 @@ class productListingController extends Controller
         // Build the product query
         $productQuery = Product::leftJoin("description", "products.id", "=", "description.p_id")
         ->leftJoin('subcategory','subcategory.id','=','products.subcat_id')
-        ->leftJoin('image as img','img.p_id','=','products.product_code')
+        // ->leftJoin('image as img','img.p_id','=','products.product_code')
+        ->leftJoin('image as img', function($join) {
+            $join->on('img.p_id', '=', 'products.product_code')
+             ->where('img.set_seq', '=', 1);
+        })
         ->select("products.product_name","products.discount","products.price","products.cat_id","subcategory.sub_cat_name","products.id","products.subcat_id", "description.description",DB::raw('MIN(img.image) as image'))
         ->whereRaw('CAST(products.discount AS DECIMAL(10,2)) >= ?', [$minPrice])
         ->whereRaw('CAST(products.discount AS DECIMAL(10,2)) <= ?', [$maxPrice])

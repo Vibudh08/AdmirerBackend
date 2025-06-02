@@ -24,7 +24,7 @@ class ProductDetailsController extends Controller
             )
             ->where('p.id', $id)
             ->first();
-    
+
         if (!$product) {
             return response()->json([
                 'status' => 'error',
@@ -86,6 +86,7 @@ class ProductDetailsController extends Controller
         $images = DB::table('image')
             ->where('p_id', '=',$product->product_code)
             ->where('status', 'Active')
+            ->orderBy('set_seq', 'asc')
             ->get()
             ->map(function ($img) {
                 return [

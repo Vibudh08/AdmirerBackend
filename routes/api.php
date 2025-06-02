@@ -22,6 +22,8 @@ use App\Http\Controllers\PlaceOrderController;
 use App\Http\Controllers\placeOrderFlowController;
 use App\Http\Controllers\razorPayController;
 use App\Http\Controllers\searchApiController;
+use App\Http\Controllers\RateReviewController;
+use App\Http\Controllers\exchangeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,8 +110,14 @@ Route::middleware('auth:sanctum')->post('/place-order', [PlaceOrderController::c
 Route::post('/send-otp', [LoginSmsController::class, 'sendOtp']);
 Route::post('/verify-otp', [LoginSmsController::class, 'verifyOtp']);
 
-
-
+//API to get all rate-review-category and rate-review-category
+Route::post('/get-rate-review', [RateReviewController::class, 'getRateReview']);
+Route::post('/rate-review', [RateReviewController::class, 'rateReview']);
+Route::post('/average-rate-review', [RateReviewController::class, 'averageRateReview']);
+Route::post('/exchange', [exchangeController::class, 'store']);    
+Route::post('/exchangeStatus', [exchangeController::class, 'exchangeStatus']);    
+Route::post('/send-mail', [exchangeController::class, 'sendMail']);    
+   
 // PhoneNumber Update API's
 Route::middleware('auth:sanctum')->post('/changeNumberSendOtp',[changePhoneNumberThroughDashboardController::class,'sendOtp'])->name('chnageNumberOtpSend');
 Route::middleware('auth:sanctum')->post('/changeNumberOtpVerify',[changePhoneNumberThroughDashboardController::class,'verifyOtp'])->name('changeNumberOtpVerification');

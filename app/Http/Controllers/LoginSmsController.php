@@ -11,18 +11,18 @@ class LoginSmsController extends Controller
 {
     public function sendOtp(Request $request)
     {
-        $request->validate([
+         $request->validate([
             'phone' => 'required|digits:10'
         ]);
 
         // Generate OTP
         $otp = rand(100000, 999999); // 6-digit OTP
-        
+            
         // Store OTP for verification (5 minutes expiry)
         Cache::put('otp_'.$request->phone, $otp, 300);
 
         // Send OTP via SMS
-        $smsService = new NimbusSmsService();
+        $smsService = new NimbusSmsService();       
         $success = $smsService->sendOtp($request->phone, $otp);
 
         return $success 

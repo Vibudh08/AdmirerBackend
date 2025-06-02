@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 
 
 class placeOrderFlowController extends Controller
@@ -71,12 +73,33 @@ class placeOrderFlowController extends Controller
     $locality=$request->locality;
     $state=$request->state;
     $city=$request->city;
-    $orderID= $request->get('orderID');
+    $orderID= $request->get('orderID');  
+    $email = "neeraj3644niit@gmail.com";
+    //$message = "";
+      
+    //Mail::to($email)->send(new TestMail($orderID));
 
+    
+    
+    //return response()->json(['message' => 'Mail sent successfully!']);
+   
     $country=99;
     $paymentType=$request->paymentType;
     $products=$this->getProductsOfOrderId($id);
     $amount=$request->amount;
+
+    if(strtolower($paymentType) == 'cod'){
+    $emailData = [
+        'orderID' => $orderID,
+        'name'    => $fname.' '.$lname,
+        'amount'   => $amount,
+        'paymentType' => $paymentType,
+    ];
+    
+
+    Mail::to($email)->send(new TestMail($emailData));
+    }
+
     $pincode=$request->pincode;
     $gst=$this->createGST($amount);
     DB::beginTransaction();
