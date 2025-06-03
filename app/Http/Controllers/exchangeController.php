@@ -14,7 +14,7 @@ public function exchangeStatus(Request $request)
 {
     $orderId = $request->input('orderid');
     $productId = $request->input('productid');
-   
+      
     $order_count = DB::table('refund_order')
         ->where('order_id', $orderId)
         ->where('od_p_id', $productId)
@@ -37,6 +37,7 @@ public function exchangeStatus(Request $request)
 
 public function store(Request $request)
 {
+    $id=Auth::user()->id;
     $comment = $request->input('comment');
     $orderId = $request->input('orderid');
     $productId = $request->input('productid');
@@ -65,6 +66,7 @@ public function store(Request $request)
             'od_p_id'        => $productId,
             'return_reason'  => $comment,
             'return_image'   => implode(', ', $imageNames),
+            'status'         => '1', 
             'price'          => '476',
         ]);
     }

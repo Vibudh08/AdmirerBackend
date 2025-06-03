@@ -228,4 +228,38 @@ Log::debug('NimbusPost Auth Token:', [$token]);
             logger()->error('NimbusPost API Error:', $response->json());
         }
        }
+
+
+     
+public function deleteOrder(Request $request)
+        {
+        $id=Auth::user()->id;
+        $awb = $request->awb;    
+        $orderid = $request->orderid;
+        $productid = $request->productid;
+
+        DB::table('order_status')->insert([
+            'user_id'=>$id,
+            'order_id'=>$orderid,
+            'tracking_id'=>$awb
+        ]);    
+               
+        $payload = [
+            'awb' => $awb,
+        ];    
+                  
+        $token = $this->getNimbusToken();
+        if (!$token) {
+            throw new \Exception('Failed to authenticate with NimbusPost');
+        }
+        Log::debug('NimbusPost Request Payload:', $payload);
+        Log::debug('NimbusPost Auth Token:', [$token]);
+        // Send API request
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+           'Authorization' => 'Bearer ' . $token,
+        ])->post('https://ship.nimbuspost.com/api/shipmentcargo/Cancel', $payload);
+     
+        }           
+
     }
