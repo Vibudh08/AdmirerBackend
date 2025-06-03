@@ -117,8 +117,8 @@ Route::post('/average-rate-review', [RateReviewController::class, 'averageRateRe
 Route::post('/exchange', [exchangeController::class, 'store']);    
 Route::post('/exchangeStatus', [exchangeController::class, 'exchangeStatus']);    
 Route::post('/send-mail', [exchangeController::class, 'sendMail']);    
-Route::post('/cancelOrder', [placeOrderFlowController::class, 'deleteOrder']);              
-   
+Route::middleware('auth:sanctum')->post('/cancelOrder', [placeOrderFlowController::class, 'deleteOrder']);              
+             
 // PhoneNumber Update API's
 Route::middleware('auth:sanctum')->post('/changeNumberSendOtp',[changePhoneNumberThroughDashboardController::class,'sendOtp'])->name('chnageNumberOtpSend');
 Route::middleware('auth:sanctum')->post('/changeNumberOtpVerify',[changePhoneNumberThroughDashboardController::class,'verifyOtp'])->name('changeNumberOtpVerification');
