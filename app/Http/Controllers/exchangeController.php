@@ -50,7 +50,7 @@ public function store(Request $request)
 
     foreach ($request->file('images') as $image) {
         $imageName = time() . '_' . $image->getClientOriginalName();
-        $image->move(public_path('uploads/refund'), $imageName); // Move to public/uploads/refund
+        // $image->move(public_path('uploads/refund'), $imageName); // Move to public/uploads/refund
         $imageNames[] = $imageName;
     }
 
@@ -65,6 +65,7 @@ public function store(Request $request)
             'od_p_id'        => $productId,
             'return_reason'  => $comment,
             'return_image'   => implode(', ', $imageNames),
+            'status'         => '1',
             'price'          => '476',
         ]);
     }
