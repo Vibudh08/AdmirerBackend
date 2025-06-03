@@ -241,13 +241,14 @@ public function deleteOrder(Request $request)
         DB::table('order_status')->insert([
             'user_id'=>$id,
             'order_id'=>$orderid,
-            'tracking_id'=>$awb
-        ]);    
+            'tracking_id'=>$awb,
+            'order_status'=>1
+        ]);          
                
         $payload = [
             'awb' => $awb,
         ];    
-                  
+          
         $token = $this->getNimbusToken();
         if (!$token) {
             throw new \Exception('Failed to authenticate with NimbusPost');
@@ -259,6 +260,13 @@ public function deleteOrder(Request $request)
             'Content-Type' => 'application/json',
            'Authorization' => 'Bearer ' . $token,
         ])->post('https://ship.nimbuspost.com/api/shipmentcargo/Cancel', $payload);
+
+        $order_status = DB::table('order_status')
+        ->where('order_id', $orderid)
+        ->where('user_id', $id)         
+        ->first();    
+
+        return response()->json(['status' => $order_status->order_status]); 
      
         }           
 
