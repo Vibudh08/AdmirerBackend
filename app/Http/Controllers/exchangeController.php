@@ -13,7 +13,7 @@ class exchangeController extends Controller
 public function exchangeStatus(Request $request)
 {
     $orderId = $request->input('orderid');
-    $productId = $request->input('productid');
+    $productId = $request->input('productid'); 
       
     $order_count = DB::table('refund_order')
         ->where('order_id', $orderId)
@@ -27,8 +27,8 @@ public function exchangeStatus(Request $request)
     }else{
     $order_status = DB::table('refund_order')
     ->where('order_id', $orderId)
-    ->where('od_p_id', $productId)
-    ->first();    
+    ->where('od_p_id', $productId)    
+    ->first();               
 
     return response()->json(['status' => $order_status->status]);  
 
@@ -41,7 +41,8 @@ public function store(Request $request)
     $comment = $request->input('comment');
     $orderId = $request->input('orderid');
     $productId = $request->input('productid');
-                 
+    $reason = $request->input('reason');          
+                      
     // Validate
     if (!$comment || !$request->hasFile('images')) {
         return response()->json(['status' => 'error', 'message' => 'Invalid request data'], 400);
@@ -68,6 +69,7 @@ public function store(Request $request)
             'return_image'   => implode(', ', $imageNames),
             'status'         => '1', 
             'price'          => '476',
+            'return_exchange' => $reason
         ]);
     }
 

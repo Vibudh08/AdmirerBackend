@@ -20,13 +20,13 @@ class placeOrderFlowController extends Controller
     {
        $products=DB::table('add_cart as ac')
        ->leftJoin('products as p','p.id','=','ac.pid')
-       ->leftJoin('image as img', 'img.p_id','=','p.id')
-       ->select('p.id as id','p.product_name','ac.quantity as quantity','img.image as img','p.discount as discount')
-       ->where('ac.user_id','=',$userId)
+       ->leftJoin('image as img', 'img.p_id','=','p.id')    
+       ->select('p.id as id','p.product_name','p.discount as discount','ac.quantity as quantity','img.image as img','p.discount as discount')
+       ->where('ac.user_id','=',$userId)  
        ->where('ac.status','=','Active')
-       ->get()
+       ->get()       
        ->toArray();
-       return $products;
+       return $products;    
     }
     public function createGST(int $number)
     {
@@ -184,8 +184,9 @@ class placeOrderFlowController extends Controller
             $orderItems[] = [
                 'name' => $product->product_name,
                 'qty' => $product->quantity,
-            ];
-        }
+                'price' => $product->discount            
+            ];                
+        }        
     
         $payload = [
             'order_number' => $orderID,
@@ -197,13 +198,13 @@ class placeOrderFlowController extends Controller
             'request_auto_pickup' => 'yes',
             'is_insurance' => '0', // Default no insurance
             'tags' => 'online_order' // Default tag
-        ];
+        ];     
         $token = $this->getNimbusToken();
-if (!$token) {
-    throw new \Exception('Failed to authenticate with NimbusPost');
-}
-Log::debug('NimbusPost Request Payload:', $payload);
-Log::debug('NimbusPost Auth Token:', [$token]);
+        if (!$token) {
+            throw new \Exception('Failed to authenticate with NimbusPost');
+        }
+        Log::debug('NimbusPost Request Payload:', $payload);
+        Log::debug('NimbusPost Auth Token:', [$token]);
         // Send API request
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -231,7 +232,7 @@ Log::debug('NimbusPost Auth Token:', [$token]);
 
 
      
-public function deleteOrder(Request $request)
+        public function deleteOrder(Request $request)
         {
         $id=Auth::user()->id;
         $awb = $request->awb;    

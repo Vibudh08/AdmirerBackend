@@ -106,6 +106,7 @@ Route::get('/homepage-data', [HomepageController::class, 'getHomepageData']);
 Route::post('/getAddress',[userApiController::class,'getAddress'])->name('getAddress');
 //place order details 
 Route::middleware('auth:sanctum')->post('/place-order', [PlaceOrderController::class, 'placeOrder']);
+Route::middleware('auth:sanctum')->post('/order-status', [PlaceOrderController::class, 'orderStatus']);
 // SMS API'S FOR LOGIN AND VERIFICATION
 Route::post('/send-otp', [LoginSmsController::class, 'sendOtp']);
 Route::post('/verify-otp', [LoginSmsController::class, 'verifyOtp']);
@@ -114,10 +115,11 @@ Route::post('/verify-otp', [LoginSmsController::class, 'verifyOtp']);
 Route::post('/get-rate-review', [RateReviewController::class, 'getRateReview']);
 Route::post('/rate-review', [RateReviewController::class, 'rateReview']);
 Route::post('/average-rate-review', [RateReviewController::class, 'averageRateReview']);
-Route::post('/exchange', [exchangeController::class, 'store']);    
+Route::middleware('auth:sanctum')->post('/exchange', [exchangeController::class, 'store']);     
 Route::post('/exchangeStatus', [exchangeController::class, 'exchangeStatus']);    
 Route::post('/send-mail', [exchangeController::class, 'sendMail']);    
-Route::middleware('auth:sanctum')->post('/cancelOrder', [placeOrderFlowController::class, 'deleteOrder']);              
+Route::middleware('auth:sanctum')->post('/cancelOrder', [placeOrderFlowController::class, 'deleteOrder']);   
+           
              
 // PhoneNumber Update API's
 Route::middleware('auth:sanctum')->post('/changeNumberSendOtp',[changePhoneNumberThroughDashboardController::class,'sendOtp'])->name('chnageNumberOtpSend');
